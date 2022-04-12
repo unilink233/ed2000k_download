@@ -1,5 +1,6 @@
 import os
 import csv
+import time
 import requests
 from sys import argv
 from bs4 import BeautifulSoup as bs
@@ -40,7 +41,7 @@ def parse_page(uid):
 
 def main(uid):
     try:
-        if not uid.isdigit() or int(uid) < 0 or int(uid) >= 999999:
+        if not uid.isdigit() or int(uid) < 0 or int(uid) >= 9999999:
             print('Invaid uid {}'.format(uid))
             return
         context = parse_page(uid)
@@ -63,6 +64,13 @@ def main(uid):
     
 
 if __name__ == "__main__":
-    uid = input('uid: ') if len(argv) < 2 else argv[1]
-    main(uid)
+    # uid = input('uid: ') if len(argv) < 2 else argv[1]
+    with open(os.path.join('.', 'ed2000K_index.csv'), 'r', newline='', encoding='utf-8', errors='ignore') as csv2:
+        rows = csv.reader(csv2)
+        t0 = time.time()
+        for idx, n in enumerate(rows):
+            uid = n[0]
+            main(uid)
+            print(uid, round((time.time() - t0)/(idx + 1), 4))
+    # main(uid)
     
